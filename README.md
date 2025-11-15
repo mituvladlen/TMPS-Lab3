@@ -76,18 +76,15 @@ The Adapter Pattern is used to integrate different payment systems that have inc
 **Target Interface**: `PaymentMethod`
 
 **Adaptees**:
-- `StripePaymentService`: External Stripe API
 - `PayPalPaymentService`: External PayPal API
 - `CashPaymentService`: Simple cash handling
 
 **Adapters**:
-- `StripeAdapter`: Adapts Stripe to our payment interface
 - `PayPalAdapter`: Adapts PayPal to our payment interface
 - `CashAdapter`: Adapts cash to our payment interface
 
 **Example Usage**:
 ```java
-PaymentMethod stripePayment = new StripeAdapter(new StripePaymentService());
 PaymentMethod paypalPayment = new PayPalAdapter(new PayPalPaymentService());
 // Both can be used interchangeably
 ```
