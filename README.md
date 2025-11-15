@@ -30,18 +30,17 @@ Structural Design Patterns are concerned with how classes and objects are compos
 The Decorator Pattern is used to dynamically add features to cocktails. Instead of creating a separate class for every possible combination of cocktails and additions, we can "wrap" base cocktails with decorators.
 
 **Key Components**:
-- `Cocktail` (interface): Base component
-- `BaseCocktail` (abstract): Concrete cocktails like Mojito, Margarita, OldFashioned
-- `CocktailDecorator` (abstract): Base decorator
-- Concrete decorators: `LimeGarnish`, `MintLeaves`, `ExtraShot`, `PremiumSpirits`, `SodaWater`
+- `Cocktail` (interface): Base component with getDescription(), getPrice(), getIngredients()
+- Concrete cocktails: `Mojito`, `Margarita`, `OldFashioned`
+- `CocktailDecorator` (abstract): Base decorator class
+- Concrete decorators: `LimeGarnish`, `MintLeaves`, `PremiumSpirits`
 
 **Example Usage**:
 ```java
 Cocktail mojito = new Mojito();
 mojito = new MintLeaves(mojito);
 mojito = new LimeGarnish(mojito);
-mojito = new SodaWater(mojito);
-// Result: Mojito with mint leaves, lime garnish, and soda water
+// Result: "Mojito + Mint + Lime" - $11.25
 ```
 
 
@@ -51,19 +50,22 @@ mojito = new SodaWater(mojito);
 
 The Facade Pattern provides a simplified interface to the complex subsystems involved in cocktail shop operations.
 
-**Subsystems**:
-- `InventoryManager`: Checks ingredient availability
-- `OrderManager`: Creates and tracks orders
-- `PaymentProcessor`: Handles payment operations
-- `NotificationService`: Sends order notifications
-
 **Facade**: `CocktailShopFacade`
+
+The facade handles:
+- Order creation and management
+- Payment processing
+- Status tracking
+- Customer notifications
 
 **Example Usage**:
 ```java
 CocktailShopFacade shop = new CocktailShopFacade();
-shop.placeOrder(customer, cocktail, paymentMethod);
-// Handles: inventory check → order creation → payment → notification
+Customer customer = new Customer("John Doe", "john@email.com");
+Cocktail cocktail = new Mojito();
+PaymentMethod payment = new PayPalAdapter();
+shop.placeOrder(customer, cocktail, payment);
+// Handles: order creation → payment → status update → notifications
 ```
 
 
@@ -76,17 +78,17 @@ The Adapter Pattern is used to integrate different payment systems that have inc
 **Target Interface**: `PaymentMethod`
 
 **Adaptees**:
-- `PayPalPaymentService`: External PayPal API
-- `CashPaymentService`: Simple cash handling
+- `PayPalService`: External PayPal API
 
 **Adapters**:
-- `PayPalAdapter`: Adapts PayPal to our payment interface
-- `CashAdapter`: Adapts cash to our payment interface
+- `PayPalAdapter`: Adapts PayPal service to our payment interface
+- `CashPayment`: Direct implementation of payment interface for cash
 
 **Example Usage**:
 ```java
-PaymentMethod paypalPayment = new PayPalAdapter(new PayPalPaymentService());
-// Both can be used interchangeably
+PaymentMethod paypalPayment = new PayPalAdapter();
+PaymentMethod cashPayment = new CashPayment();
+// Both can be used interchangeably through the same interface
 ```
 
 
